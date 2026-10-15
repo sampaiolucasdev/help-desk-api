@@ -87,10 +87,10 @@ model Ticket {
   comments Comment[]
   history  TicketHistory[]
 
-  @@index([requesterId, createdAt])
-  @@index([technicianId, status])
-  @@index([departmentId, status])
-  @@index([status, priority])
+  @@index([requesterId, createdAt]) //MEUS CHAMADOS
+  @@index([technicianId, status]) //CHAMADOS ATRIBUÍDOS QUE ESTÃO EM ANDAMENTO/ABERTOS
+  @@index([departmentId, status]) //CHAMADOS POR DEPARTAMENTO
+  @@index([status, priority]) //FILA GERAL, TODOS OS CHAMADOS ABERTOS, EM ANDAMENTO, AGUARDANDO SOLICITANTE
 }
 
 model Comment {
@@ -100,10 +100,10 @@ model Comment {
   authorId  String
   createdAt DateTime @default(now())
 
-  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade) //CASCADE: SE O TICKET FOR DELETADO, OS COMENTÁRIOS TAMBÉM SERÃO DELETADOS
   author User   @relation(fields: [authorId], references: [id])
 
-  @@index([ticketId, createdAt])
+  @@index([ticketId, createdAt]) //COMENTÁRIOS POR TICKET EM ORDEM CRONOLÓGICA
 }
 
 model TicketHistory {
@@ -117,5 +117,5 @@ model TicketHistory {
   ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
   actor  User   @relation(fields: [actorId], references: [id])
 
-  @@index([ticketId, createdAt])
+  @@index([ticketId, createdAt]) //HISTÓRICO DE AÇÕES POR TICKET POR ORDEM CRONOLÓGICA
 }
