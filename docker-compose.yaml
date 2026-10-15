@@ -1,17 +1,22 @@
-version: '3.8'
 
 services:
   postgres:
-    image: postgres:16-alpine
-    container_name: helpflow_postgres
+    image: postgres:17.6-alpine
+    container_name: helpdesk-postgres
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: secretpassword
-      POSTGRES_DB: helpflow_db
+      POSTGRES_USER: helpdesk
+      POSTGRES_PASSWORD: helpdesk_dev
+      POSTGRES_DB: helpdesk
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - helpdesk_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U helpdesk -d helpdesk"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
 volumes:
-  pgdata:
+  helpdesk_data:
