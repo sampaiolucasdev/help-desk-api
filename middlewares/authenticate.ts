@@ -44,11 +44,14 @@ export async function authenticate(
       throw new AppError("Usuário inexistente ou inativo.", 401);
     }
 
-    req.user = {
+    const authenticatedUser = {
       id: user.id,
       role: user.role,
       departmentId: user.departmentId,
     };
+
+    (req as Request & { user: typeof authenticatedUser }).user =
+      authenticatedUser;
 
     next();
   } catch (error) {
