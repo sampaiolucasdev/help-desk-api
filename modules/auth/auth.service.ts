@@ -57,7 +57,7 @@ export async function loginUser(data: { email: string; password: string }) {
     where: { email: data.email.toLowerCase() },
   });
 
-  if (!user || !user.isActive) {
+  if (!user || !user.active) {
     throw new AppError("E-mail ou senha inválidos.", 401);
   }
 

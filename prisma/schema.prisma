@@ -34,17 +34,21 @@ model Department {
   name      String   @unique
   createdAt DateTime @default(now())
 
-  users   User[]
-  tickets Ticket[]
+  users      User[]
+  tickets    Ticket[]
+  categories Category[]
 }
 
 model Category {
   id        String   @id @default(uuid())
-  name      String   @unique
-  createdAt DateTime @default(now())
+  name         String
   departmentId String
+  createdAt    DateTime @default(now())
 
-  tickets Ticket[]
+  department Department @relation(fields: [departmentId], references: [id])
+  tickets    Ticket[]
+
+  @@unique([departmentId, name])
 }
 
 model User {

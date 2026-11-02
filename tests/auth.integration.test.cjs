@@ -1,6 +1,6 @@
 const request = require("supertest");
 const { app } = require("../dist/src/app");
-const { prisma } = require("../dist/src/lib/prisma");
+const { prisma } = require("../dist/lib/prisma");
 
 const testEmail = `teste-${Date.now()}@example.com`;
 const testPassword = "SenhaTeste123!";

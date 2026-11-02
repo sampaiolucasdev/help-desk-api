@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "API REST de gerenciamento de chamados de suporte técnico",
-  "main": "dist/server.js",
+  "main": "dist/src/server.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sampaiolucasdev/help-desk-api.git"
@@ -18,7 +18,8 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js",
+    "pretest": "tsc",
+    "start": "node dist/src/server.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "tsx prisma/seed.ts",

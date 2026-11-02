@@ -150,7 +150,7 @@ export async function assignTicket(
     where: { id: technicianId },
   });
 
-  if (!technician || !technician.isActive || technician.role !== "TECHNICIAN") {
+  if (!technician || !technician.active || technician.role !== "TECHNICIAN") {
     throw new AppError("Técnico inválido ou inativo.", 400);
   }
 
@@ -199,9 +199,16 @@ export async function changeTicketStatus(
     );
   }
 
-  if (actor.role === "TECHNICIAN" && ticket.technicianId !== actor.id) {
+  if (
+    actor.role === "TECHNICIAN" &&
+    ticket.technicianId !== null &&
+    ticket.technicianId !== actor.id
+  ) {
     throw new AppError("Você só pode alterar chamados atribuídos a você.", 403);
   }
+
+  // Técnico do departamento que inicia um chamado sem responsável o assume.
+  const claimTicket = actor.role === "TECHNICIAN" && ticket.technicianId === null;
 
   if (!allowedTransitions[ticket.status].includes(status)) {
     throw new AppError(
@@ -214,7 +221,12 @@ export async function changeTicketStatus(
     where: { id: ticketId },
     data: {
       status,
-      resolvedAt: status === "RESOLVED" ? new Date() : null,
+      ...(claimTicket ? { technicianId: actor.id } : {}),
+      ...(status === "RESOLVED"
+        ? { resolvedAt: new Date() }
+        : status === "IN_PROGRESS"
+          ? { resolvedAt: null }
+          : {}),
       history: {
         create: {
           actorId: actor.id,
